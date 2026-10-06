@@ -1,0 +1,12 @@
+{
+  "info": {"name": "Blog API image, search and pagination demo", "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"},
+  "variable": [{"key": "baseUrl", "value": "http://127.0.0.1:8000"}, {"key": "token", "value": "paste-access-token"}, {"key": "postId", "value": "1"}],
+  "item": [
+    {"name": "Register demo user", "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\"username\":\"demo_user\",\"email\":\"demo@example.com\",\"password\":\"demo-password-123\"}", "options": {"raw": {"language": "json"}}}, "url": "{{baseUrl}}/auth/register"}},
+    {"name": "Login", "event": [{"listen": "test", "script": {"exec": ["const body = pm.response.json();", "pm.collectionVariables.set('token', body.access_token);"]}}], "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\"username\":\"demo_user\",\"password\":\"demo-password-123\"}", "options": {"raw": {"language": "json"}}}, "url": "{{baseUrl}}/auth/login"}},
+    {"name": "Create post with image", "request": {"method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "body": {"mode": "formdata", "formdata": [{"key": "title", "value": "Post with a cover", "type": "text"}, {"key": "content", "value": "A demo post for image upload.", "type": "text"}, {"key": "image", "type": "file", "src": ""}]}, "url": "{{baseUrl}}/posts/create"}},
+    {"name": "Update post and replace image", "request": {"method": "PUT", "header": [{"key": "Authorization", "value": "Bearer {{token}}"}], "body": {"mode": "formdata", "formdata": [{"key": "title", "value": "Updated title", "type": "text"}, {"key": "image", "type": "file", "src": ""}]}, "url": "{{baseUrl}}/posts/{{postId}}/update"}},
+    {"name": "Search and paginate posts", "request": {"method": "GET", "url": "{{baseUrl}}/posts?page=1&limit=10&search=demo"}},
+    {"name": "List posts page 1", "request": {"method": "GET", "url": "{{baseUrl}}/posts?page=1&limit=10"}}
+  ]
+}

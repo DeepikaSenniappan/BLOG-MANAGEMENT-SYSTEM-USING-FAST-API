@@ -14,6 +14,12 @@ uvicorn main:app --reload
 
 Open [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs). Tables are created in `blog.db` on startup. The default database is SQLite; `DATABASE_URL` can override it.
 
+## Post images, search, and pagination
+
+Authenticated users can create a post with optional image using `POST /posts/create` (multipart form fields `title`, `content`, optional `image`) or replace its image using `PUT /posts/{id}/update`. Images up to 10 MB in JPEG, PNG, GIF, or WebP format are saved in `media/posts/` and served under `/media/posts/`. The post response includes `image_url` (or `null` when there is no image). Existing JSON `POST /posts` and `PATCH /posts/{id}` routes remain available.
+
+`GET /posts?page=1&limit=10&search=keyword` searches title and content and paginates the matching posts. Its response contains `items`, `total`, `page`, `limit`, and `total_pages`; `search` can be combined with either pagination parameter. See `output/post_api_demo.postman_collection.json` for a short Postman collection.
+
 ## Try the API in Swagger
 
 1. `POST /auth/register` with a username (3–30 characters), valid email, and password (at least 8 characters).
@@ -22,9 +28,26 @@ Open [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs). Tables are create
 4. Create a post, then try the comment and like routes. Post list/detail and comment reads are public. A like is idempotent; `DELETE /posts/{id}/like` removes your like.
 5. To confirm ownership rules, register a second account and try editing/deleting the first account's post; the API returns 403.
 
-## Notifications
+## Email notifications
 
-Comment and first-like events notify the post author. Without SMTP configured, events are logged by the API process. For delivery, set `SMTP_HOST`, `SMTP_PORT` (default 587), `SMTP_USERNAME`, `SMTP_PASSWORD`, and optionally `SMTP_FROM`. SMTP delivery is performed as a background task.
+The post author receives an email after another user successfully comments or likes a post. Notifications include the post title, actor username, activity, and UTC timestamp. Repeated likes do not send duplicate messages, and users are not notified about their own activity. Email delivery uses FastAPI `BackgroundTasks`, so SMTP work runs after the API response in Starlette's worker thread pool. Delivery errors are logged and do not undo a saved comment or like.
+
+Configure SMTP with environment variables before starting the API:
+
+```powershell
+$env:SMTP_HOST = "sandbox.smtp.mailtrap.io"
+$env:SMTP_PORT = "2525"
+$env:SMTP_USERNAME = "your-mailtrap-username"
+$env:SMTP_PASSWORD = "your-mailtrap-password"
+$env:SMTP_FROM = "Blog Notifications <notifications@example.com>"
+$env:SMTP_USE_STARTTLS = "true"
+```
+
+For providers using implicit TLS, set `SMTP_USE_SSL=true` and `SMTP_USE_STARTTLS=false`. If SMTP is not configured, notification details are logged locally. Do not commit SMTP credentials.
+
+### Test notifications without an external SMTP account
+
+Open two PowerShell windows in the project folder. In the first, run `python dev_smtp_inbox.py`. In the second, set `$env:SMTP_HOST = "127.0.0.1"`, `$env:SMTP_PORT = "1025"`, `$env:SMTP_USERNAME = ""`, `$env:SMTP_PASSWORD = ""`, `$env:SMTP_USE_SSL = "false"`, and `$env:SMTP_USE_STARTTLS = "false"`, then run `uvicorn main:app --reload`. Trigger a comment or first-time like in Swagger; the received email content appears in the first window. This is a local capture inbox and does not deliver real email.
 
 ## Schema and security
 

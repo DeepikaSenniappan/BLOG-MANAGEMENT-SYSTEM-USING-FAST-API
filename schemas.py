@@ -43,6 +43,15 @@ class PostOut(BaseModel):
     content: str
     author_id: int
     created_at: datetime
+    image_url: str | None = None
+
+
+class PaginatedPosts(BaseModel):
+    items: list[PostOut]
+    total: int
+    page: int
+    limit: int
+    total_pages: int
 
 
 class CommentCreate(BaseModel):

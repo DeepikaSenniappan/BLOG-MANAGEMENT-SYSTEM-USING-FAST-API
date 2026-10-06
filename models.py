@@ -24,11 +24,16 @@ class Post(Base):
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
     title: Mapped[str] = mapped_column(String(200), index=True)
     content: Mapped[str] = mapped_column(Text)
+    image: Mapped[str | None] = mapped_column(String(500), nullable=True)
     author_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
     author: Mapped[User] = relationship(back_populates="posts")
     comments: Mapped[list["Comment"]] = relationship(back_populates="post", cascade="all, delete-orphan")
     likes: Mapped[list["Like"]] = relationship(back_populates="post", cascade="all, delete-orphan")
+
+    @property
+    def image_url(self) -> str | None:
+        return f"/media/{self.image}" if self.image else None
 
 
 class Comment(Base):
@@ -47,4 +52,5 @@ class Like(Base):
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
     post_id: Mapped[int] = mapped_column(ForeignKey("posts.id", ondelete="CASCADE"), index=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
     post: Mapped[Post] = relationship(back_populates="likes")
