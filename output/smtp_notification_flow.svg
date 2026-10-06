@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" role="img" aria-labelledby="title desc">
+  <title id="title">FastAPI Blog SMTP Email Notifications</title>
+  <desc id="desc">A workflow diagram showing comments and likes triggering background SMTP email notifications to a blog post owner through Mailtrap.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f8fbff"/><stop offset="1" stop-color="#edf4ff"/></linearGradient>
+    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#2563eb"/><stop offset="1" stop-color="#4f46e5"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="12" stdDeviation="14" flood-color="#16345f" flood-opacity=".12"/></filter>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M1 1 11 6 1 11" fill="none" stroke="#7891b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker>
+    <style>
+      .title{font:700 38px 'Segoe UI',Arial,sans-serif;fill:#14233d}.sub{font:400 18px 'Segoe UI',Arial,sans-serif;fill:#5c6d88}
+      .head{font:700 20px 'Segoe UI',Arial,sans-serif;fill:#182944}.body{font:400 16px 'Segoe UI',Arial,sans-serif;fill:#52647f}.small{font:600 13px 'Segoe UI',Arial,sans-serif;fill:#6d7f9a;letter-spacing:1px}
+      .card{fill:#fff;stroke:#dbe5f2;stroke-width:1.5;rx:22;filter:url(#shadow)}.line{stroke:#7891b8;stroke-width:3;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect width="1440" height="900" fill="url(#bg)"/>
+  <circle cx="1300" cy="120" r="180" fill="#dce9ff" opacity=".45"/><circle cx="110" cy="790" r="160" fill="#e1f3ff" opacity=".55"/>
+  <text x="720" y="88" text-anchor="middle" class="title">FastAPI Blog Email Notifications</text>
+  <text x="720" y="124" text-anchor="middle" class="sub">SMTP delivery runs after the comment or like API request completes</text>
+
+  <!-- activity sources -->
+  <rect x="70" y="230" width="265" height="220" class="card"/>
+  <text x="105" y="272" class="small">ACTIVITY</text>
+  <circle cx="119" cy="323" r="24" fill="#e9efff"/><path d="M108 316h22a4 4 0 0 1 4 4v15a4 4 0 0 1-4 4h-13l-8 6v-25a4 4 0 0 1 4-4z" fill="none" stroke="#4158c9" stroke-width="2.5" stroke-linejoin="round"/>
+  <text x="158" y="330" class="head">Comment</text>
+  <circle cx="119" cy="389" r="24" fill="#fff1e8"/><path d="M119 405s-16-9-16-20a9 9 0 0 1 16-6 9 9 0 0 1 16 6c0 11-16 20-16 20z" fill="none" stroke="#ed7a35" stroke-width="2.5" stroke-linejoin="round"/>
+  <text x="158" y="396" class="head">Like</text>
+
+  <!-- endpoint -->
+  <rect x="420" y="250" width="270" height="180" class="card"/>
+  <rect x="450" y="278" width="84" height="28" rx="14" fill="#e8f0ff"/><text x="492" y="297" text-anchor="middle" class="small" fill="#3158b8">FASTAPI</text>
+  <text x="450" y="343" class="head">Comment / Like</text><text x="450" y="375" class="body">Endpoint saves the activity</text><text x="450" y="400" class="body">before queuing an email.</text>
+
+  <!-- background -->
+  <rect x="785" y="250" width="270" height="180" class="card"/>
+  <rect x="815" y="278" width="150" height="28" rx="14" fill="#e5f7f0"/><text x="890" y="297" text-anchor="middle" class="small" fill="#18835e">BACKGROUND</text>
+  <text x="815" y="343" class="head">BackgroundTasks</text><text x="815" y="375" class="body">SMTP work runs after</text><text x="815" y="400" class="body">the API response.</text>
+
+  <!-- mailtrap -->
+  <rect x="1150" y="250" width="230" height="180" class="card"/>
+  <rect x="1180" y="278" width="130" height="28" rx="14" fill="#fff2e7"/><text x="1245" y="297" text-anchor="middle" class="small" fill="#b65c18">SMTP SERVER</text>
+  <text x="1180" y="343" class="head">Mailtrap</text><text x="1180" y="375" class="body">Captures test emails</text><text x="1180" y="400" class="body">in the sandbox inbox.</text>
+
+  <path d="M335 340H410" class="line"/><path d="M690 340H775" class="line"/><path d="M1055 340H1140" class="line"/>
+  <text x="372" y="318" text-anchor="middle" class="small">POST</text><text x="732" y="318" text-anchor="middle" class="small">QUEUE</text><text x="1097" y="318" text-anchor="middle" class="small">SMTP</text>
+
+  <!-- email content -->
+  <rect x="250" y="550" width="940" height="230" rx="26" fill="#fff" stroke="#dbe5f2" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="250" y="550" width="940" height="62" rx="26" fill="url(#blue)"/><path d="M250 586h940v26H250z" fill="url(#blue)"/>
+  <text x="300" y="590" font="700 21px 'Segoe UI',Arial,sans-serif" fill="#fff">Email sent to the post owner</text>
+  <text x="300" y="655" class="body">Post:</text><text x="420" y="655" class="head">FastAPI Best Practices</text>
+  <text x="300" y="695" class="body">User:</text><text x="420" y="695" class="head">John Doe</text>
+  <text x="720" y="655" class="body">Activity:</text><text x="830" y="655" class="head">Commented on your post</text>
+  <text x="720" y="695" class="body">Time:</text><text x="830" y="695" class="head">2026-03-04 11:20 AM UTC</text>
+  <text x="720" y="749" class="small">SIMPLE • CLEAR • PROFESSIONAL</text>
+</svg>
